@@ -1,4 +1,4 @@
-## Voby Vite
+# Voby Vite
 
 The official Voby plugin for [Vite](https://vitejs.dev).
 
