@@ -1,5 +1,5 @@
 {
-  "name": "voby-esbuild",
+  "name": "voby-vite",
   "repository": "github:vobyjs/voby-vite",
   "description": "The official Voby plugin for Vite.",
   "version": "1.0.0",
