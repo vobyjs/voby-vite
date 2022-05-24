@@ -15,7 +15,9 @@ import {defineConfig} from 'vite';
 import voby from 'voby-vite';
 
 const config = defineConfig ({
-  plugins: [voby ()]
+  plugins: [
+    voby ()
+  ]
 });
 
 export default config;
