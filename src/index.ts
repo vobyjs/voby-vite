@@ -9,8 +9,8 @@ const vite = () => {
 
       return {
         esbuild: {
-          jsxInject: `import {h as $$h, Fragment as $$F} from 'voby';\n`,
-          jsxFactory: '$$h',
+          jsxInject: `import {createElement as $$c, Fragment as $$F} from 'voby';\n`,
+          jsxFactory: '$$c',
           jsxFragment: '$$F'
         }
       };
