@@ -16,7 +16,12 @@ import voby from 'voby-vite';
 
 const config = defineConfig ({
   plugins: [
-    voby ()
+    voby ({
+      hmr: { // HMR-related options
+        enabled: ( process.env.NODE_ENV !== 'production' ), // Whether HMR is enabled or not
+        filter: /\.(jsx|tsx)$/ // Regex matching the files containing components to enable HMR for
+      }
+    })
   ]
 });
 
