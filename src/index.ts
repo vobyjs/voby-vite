@@ -9,7 +9,7 @@ const vite = ( options: Options = {} ) => {
 
   const hmrEnabled = !!options.hmr?.enabled;
   const hmrFilter = options.hmr?.filter || /\.(jsx|tsx)$/;
-  const hmrDefaultExportRe = /^export\s+default\s+([A-Z][a-z0-9$_-]*)\s*(;|$)/m;
+  const hmrDefaultExportRe = /^export\s+default\s+(_?[A-Z][a-z0-9$_-]*)\s*(;|$)/m;
 
   return {
     name: 'voby',
