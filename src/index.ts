@@ -10,7 +10,7 @@ const vite = ( options: Options = {} ) => {
   const hmrEnabled = !!options.hmr?.enabled;
   const hmrFilter = options.hmr?.filter || /\.(jsx|tsx)$/;
   const hmrDefaultExportRe = /^export\s+default\s+(_?[A-Z][a-z0-9$_-]*)\s*(;|$)/m;
-  const hmrNamedInlineExportRe = /^export\s+(function\s+(_?[A-Z][a-z0-9$_-]*))/m;
+  const hmrNamedInlineExportRe = /^export\s+((?:function|const)\s+(_?[A-Z][a-z0-9$_-]*))/m;
 
   return {
     name: 'voby',
@@ -31,6 +31,8 @@ const vite = ( options: Options = {} ) => {
 
       if ( !hmrFilter.test ( id ) ) return;
 
+      const exports: string[] = [];
+
       code = code.replace ( hmrDefaultExportRe, ( _, $1, $2 ) => {
 
         return `export default $$hmr(import.meta.hot?.accept, ${$1})${$2}`;
@@ -39,9 +41,17 @@ const vite = ( options: Options = {} ) => {
 
       code = code.replace ( hmrNamedInlineExportRe, ( _, $1, $2 ) => {
 
-        return `const $$hmr_${$2} = $$hmr(import.meta.hot?.accept, ${$2});\nexport {$$hmr_${$2} as ${$2}};\n${$1}`;
+        exports.push ( `const $$hmr_${$2} = $$hmr(import.meta.hot?.accept, ${$2});\nexport {$$hmr_${$2} as ${$2}};` );
+
+        return $1;
 
       });
+
+      if ( exports.length ) {
+
+        code += `\n${exports.join ( '\n' )}`;
+
+      }
 
       return code;
 
