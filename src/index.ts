@@ -54,14 +54,23 @@ const vite = ( options: Options = {} ) => {
 
         return $1.split ( ',' ).filter ( part => {
 
-          const match = part.match ( hmrNamedExportSingleRe ) || part.match ( hmrNamedExportAliasedRe );
+          const matchSingle = part.match ( hmrNamedExportSingleRe );
+          const matchAliased = part.match ( hmrNamedExportAliasedRe );
 
-          if ( match ) {
+          if ( matchSingle ) {
 
-            const name = match[1];
-            const alias = match[2] || name;
+            const name = matchSingle[1];
 
-            exports.push ( `const $$hmr_${name} = $$hmr(import.meta.hot?.accept, ${name});\nexport {$$hmr_${name} as ${alias}};` );
+            exports.push ( `const $$hmr_${name} = $$hmr(import.meta.hot?.accept, ${name});\nexport {$$hmr_${name} as ${matchSingle}};` );
+
+            return false;
+
+          } else if ( matchAliased ) {
+
+            const name = matchAliased[1];
+            const alias = matchAliased[2];
+
+            exports.push ( `${name}.__hmr_as__ = "${alias}";\nconst $$hmr_${name} = $$hmr(import.meta.hot?.accept, ${name});\nexport {$$hmr_${name} as ${alias}};` );
 
             return false;
 
