@@ -61,7 +61,7 @@ const vite = ( options: Options = {} ) => {
 
             const name = matchSingle[1];
 
-            exports.push ( `const $$hmr_${name} = $$hmr(import.meta.hot?.accept, ${name});\nexport {$$hmr_${name} as ${matchSingle}};` );
+            exports.push ( `const $$hmr_${name} = $$hmr(import.meta.hot?.accept, ${name});\nexport {$$hmr_${name} as ${name}};` );
 
             return false;
 
