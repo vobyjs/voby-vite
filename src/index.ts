@@ -10,6 +10,9 @@ const vite = ( options: Options = {} ) => {
   const hmrEnabled = !!options.hmr?.enabled;
   const hmrFilter = options.hmr?.filter || /\.(jsx|tsx)$/;
   const hmrDefaultExportRe = /^export\s+default\s+(_?[A-Z][a-z0-9$_-]*)\s*(;|$)/m;
+  const hmrNamedExportRe = /^export\s+{([^}]+)}/gm;
+  const hmrNamedExportSingleRe = /^\s*(_?[A-Z][a-z0-9$_-]*)\s*$/;
+  const hmrNamedExportAliasedRe = /^\s*([a-zA-Z$_][a-zA-Z0-9$_]*)\s+as\s+(_?[A-Z][a-z0-9$_-]*)\s*$/;
   const hmrNamedInlineExportRe = /^export\s+((?:function|const)\s+(_?[A-Z][a-z0-9$_-]*))/gm;
 
   return {
@@ -33,17 +36,42 @@ const vite = ( options: Options = {} ) => {
 
       const exports: string[] = [];
 
-      code = code.replace ( hmrDefaultExportRe, ( _, $1, $2 ) => {
+      code = code.replace ( hmrDefaultExportRe, ( _: string, $1: string, $2: string ) => {
 
         return `export default $$hmr(import.meta.hot?.accept, ${$1})${$2}`;
 
       });
 
-      code = code.replace ( hmrNamedInlineExportRe, ( _, $1, $2 ) => {
+      code = code.replace ( hmrNamedInlineExportRe, ( _: string, $1: string, $2: string ) => {
 
         exports.push ( `const $$hmr_${$2} = $$hmr(import.meta.hot?.accept, ${$2});\nexport {$$hmr_${$2} as ${$2}};` );
 
         return $1;
+
+      });
+
+      code = code.replace ( hmrNamedExportRe, ( _: string, $1: string ) => {
+
+        return $1.split ( ',' ).filter ( part => {
+
+          const match = part.match ( hmrNamedExportSingleRe ) || part.match ( hmrNamedExportAliasedRe );
+
+          if ( match ) {
+
+            const name = match[1];
+            const alias = match[2] || name;
+
+            exports.push ( `const $$hmr_${name} = $$hmr(import.meta.hot?.accept, ${name});\nexport {$$hmr_${name} as ${alias}};` );
+
+            return false;
+
+          } else {
+
+            return true;
+
+          }
+
+        }).join ( ',' );
 
       });
 
