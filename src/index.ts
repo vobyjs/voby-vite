@@ -10,7 +10,7 @@ const vite = ( options: Options = {} ) => {
   const hmrEnabled = !!options.hmr?.enabled;
   const hmrFilter = options.hmr?.filter || /\.(jsx|tsx)$/;
   const hmrDefaultExportRe = /^export\s+default\s+(_?[A-Z][a-z0-9$_-]*)\s*(;|$)/m;
-  const hmrNamedInlineExportRe = /^export\s+(function\s+(_?[A-Z][a-z0-9$_-]*))/;
+  const hmrNamedInlineExportRe = /^export\s+(function\s+(_?[A-Z][a-z0-9$_-]*))/m;
 
   return {
     name: 'voby',
