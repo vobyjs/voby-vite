@@ -10,6 +10,7 @@ const vite = ( options: Options = {} ) => {
   const hmrEnabled = !!options.hmr?.enabled;
   const hmrFilter = options.hmr?.filter || /\.(jsx|tsx)$/;
   const hmrDefaultExportRe = /^export\s+default\s+(_?[A-Z][a-z0-9$_-]*)\s*(;|$)/m;
+  const hmrNamedInlineExportRe = /^export\s+(function\s+(_?[A-Z][a-z0-9$_-]*))/;
 
   return {
     name: 'voby',
@@ -17,7 +18,7 @@ const vite = ( options: Options = {} ) => {
 
       return {
         esbuild: {
-          jsxInject: `import {createElement as $$c, Fragment as $$F} from 'voby';\n`,
+          jsxInject: `import {createElement as $$c, Fragment as $$F, hmr as $$hmr} from 'voby';\n`,
           jsxFactory: '$$c',
           jsxFragment: '$$F'
         }
@@ -30,11 +31,19 @@ const vite = ( options: Options = {} ) => {
 
       if ( !hmrFilter.test ( id ) ) return;
 
-      return code.replace ( hmrDefaultExportRe, ( _, $1, $2 ) => {
+      code = code.replace ( hmrDefaultExportRe, ( _, $1, $2 ) => {
 
-        return `import {hmr as $$hmr} from 'voby';\nexport default $$hmr(import.meta.hot?.accept, ${$1})${$2}`;
+        return `export default $$hmr(import.meta.hot?.accept, ${$1})${$2}`;
 
       });
+
+      code = code.replace ( hmrNamedInlineExportRe, ( _, $1, $2 ) => {
+
+        return `const $$hmr_${$2} = $$hmr(import.meta.hot?.accept, ${$2});\nexport {hmr_${$2} as ${$2}};\n${$1}`;
+
+      });
+
+      return code;
 
     }
   };
