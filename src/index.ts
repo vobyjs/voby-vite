@@ -52,7 +52,7 @@ const vite = ( options: Options = {} ) => {
 
       code = code.replace ( hmrNamedExportRe, ( _: string, $1: string ) => {
 
-        return $1.split ( ',' ).filter ( part => {
+        const parts = $1.split ( ',' ).filter ( part => {
 
           const matchSingle = part.match ( hmrNamedExportSingleRe );
           const matchAliased = part.match ( hmrNamedExportAliasedRe );
@@ -80,7 +80,9 @@ const vite = ( options: Options = {} ) => {
 
           }
 
-        }).join ( ',' );
+        });
+
+        return `export {${parts.join ( ',' )}}`;
 
       });
 
