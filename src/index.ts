@@ -39,7 +39,7 @@ const vite = ( options: Options = {} ) => {
 
       code = code.replace ( hmrNamedInlineExportRe, ( _, $1, $2 ) => {
 
-        return `const $$hmr_${$2} = $$hmr(import.meta.hot?.accept, ${$2});\nexport {hmr_${$2} as ${$2}};\n${$1}`;
+        return `const $$hmr_${$2} = $$hmr(import.meta.hot?.accept, ${$2});\nexport {$$hmr_${$2} as ${$2}};\n${$1}`;
 
       });
 
