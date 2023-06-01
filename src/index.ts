@@ -9,11 +9,11 @@ const vite = ( options: Options = {} ) => {
 
   const hmrEnabled = !!options.hmr?.enabled;
   const hmrFilter = options.hmr?.filter || /\.(jsx|tsx)$/;
-  const hmrDefaultExportRe = /^export\s+default\s+(_?[A-Z][a-z0-9$_-]*)\s*(;|$)/m;
+  const hmrDefaultExportRe = /^export\s+default\s+(_?[A-Z][a-zA-Z0-9$_-]*)\s*(;|$)/m;
   const hmrNamedExportRe = /^export\s+{([^}]+)}/gm;
-  const hmrNamedExportSingleRe = /^\s*(_?[A-Z][a-z0-9$_-]*)\s*$/;
-  const hmrNamedExportAliasedRe = /^\s*([a-zA-Z$_][a-zA-Z0-9$_]*)\s+as\s+(_?[A-Z][a-z0-9$_-]*)\s*$/;
-  const hmrNamedInlineExportRe = /^export\s+((?:function|const)\s+(_?[A-Z][a-z0-9$_-]*))/gm;
+  const hmrNamedExportSingleRe = /^\s*(_?[A-Z][a-zA-Z0-9$_-]*)\s*$/;
+  const hmrNamedExportAliasedRe = /^\s*([a-zA-Z$_][a-zA-Z0-9$_]*)\s+as\s+(_?[A-Z][a-zA-Z0-9$_-]*)\s*$/;
+  const hmrNamedInlineExportRe = /^export\s+((?:function|const)\s+(_?[A-Z][a-zA-Z0-9$_-]*))/gm;
 
   return {
     name: 'voby',
