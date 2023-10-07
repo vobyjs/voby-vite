@@ -44,7 +44,7 @@ const vite = ( options: Options = {} ) => {
 
       code = code.replace ( hmrNamedInlineExportRe, ( _: string, $1: string, $2: string ) => {
 
-        exports.push ( `const $$hmr_${$2} = $$hmr(import.meta.hot?.accept, ${$2});\nexport {$$hmr_${$2} as ${$2}};` );
+        exports.push ( `${$2}.__hmr_as__ = "${$2}";\nconst $$hmr_${$2} = $$hmr(import.meta.hot?.accept, ${$2});\nexport {$$hmr_${$2} as ${$2}};` );
 
         return $1;
 
@@ -61,7 +61,7 @@ const vite = ( options: Options = {} ) => {
 
             const name = matchSingle[1];
 
-            exports.push ( `const $$hmr_${name} = $$hmr(import.meta.hot?.accept, ${name});\nexport {$$hmr_${name} as ${name}};` );
+            exports.push ( `${name}.__hmr_as__ = "${name}";\nconst $$hmr_${name} = $$hmr(import.meta.hot?.accept, ${name});\nexport {$$hmr_${name} as ${name}};` );
 
             return false;
 
